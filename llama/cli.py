@@ -1,5 +1,5 @@
-import logging
 import inspect
+import logging
 from argparse import ArgumentParser, FileType
 from pathlib import Path
 from sys import stderr
@@ -22,7 +22,8 @@ def help_():
 
 
 def pull(model_dir: Path, model_size: str):
-    pass
+    from .zoo import pull
+    pull('llama', model_size, model_dir)
 
 
 def serve():
