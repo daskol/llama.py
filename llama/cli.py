@@ -17,6 +17,11 @@ LOG_LEVELS = {
 }
 
 
+def convert(fp_type: int, model_dir: Path):
+    from .io import convert
+    convert(model_dir, fp_type)
+
+
 def help_():
     parser.print_help()
 
@@ -78,6 +83,11 @@ parser.add_argument('--log-level', default='info', choices=sorted(LOG_LEVELS.key
 parser.add_argument('--log-output', default=stderr, metavar='FILENAME', type=FileType('w'), help='set output file or stderr (-) for logging')  # noqa: E501
 
 subparsers = parser.add_subparsers()
+
+parser_convert = subparsers.add_parser('convert', help='convert model from pth to gglm format')  # noqa: E501
+parser_convert.set_defaults(func=convert)
+parser_convert.add_argument('--fp-type', choices=('fp16', 'fp32'), default='fp16', help='target floating point type')  # noqa: E501
+parser_convert.add_argument('model_dir', type=Path, default=Path('.'), help='model directory')  # noqa: E501
 
 parser_help = subparsers.add_parser('help', add_help=False, help='show this message and exit')  # noqa: E501
 parser_help.set_defaults(func=help_)
