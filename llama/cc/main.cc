@@ -1,7 +1,3 @@
-#include "ggml.h"
-
-#include "utils.h"
-
 #include <cassert>
 #include <cinttypes>
 #include <cmath>
@@ -18,6 +14,9 @@
 #elif defined (_WIN32)
 #include <signal.h>
 #endif
+
+#include <llama/cc/ggml.h>
+#include <llama/cc/utils.h>
 
 #if defined (_WIN32)
 #pragma comment(lib,"kernel32.lib")

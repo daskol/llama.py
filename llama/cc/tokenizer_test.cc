@@ -1,8 +1,8 @@
-#include "utils.h"
-
 #include <cstdio>
 #include <string>
 #include <map>
+
+#include <llama/cc/utils.h>
 
 static const std::map<std::string, std::vector<llama_vocab::id>> k_tests = {
     { "Hello World",        { 1,  10994,   2787, }, },

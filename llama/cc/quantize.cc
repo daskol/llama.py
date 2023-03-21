@@ -1,7 +1,3 @@
-#include "ggml.h"
-
-#include "utils.h"
-
 #include <cassert>
 #include <cinttypes>
 #include <cmath>
@@ -11,6 +7,9 @@
 #include <string>
 #include <vector>
 #include <regex>
+
+#include <llama/cc/ggml.h>
+#include <llama/cc/utils.h>
 
 // TODO: move somewhere else
 #define QK 32
