@@ -1,7 +1,7 @@
 # llama.py
 
-**llama.py** is a fork of [llama.cpp][1] which inference runtime for [LLaMA][2]
-model in pure C/C++.
+**llama.py** is a fork of [llama.cpp][1] which provides Python bindings to an
+inference runtime for [LLaMA][2] model in pure C/C++.
 
 ## Description
 
