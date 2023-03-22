@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm>=7", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llama.py"
+version = "0.0.0"
+readme = "README.md"
+classifiers = []
+dependencies = []
+
+[project.optional-dependencies]
+ci = [
+    "numpy",
+    "sentencepiece",
+    "torch",
+]
+
+[tool.isort]
+
+[tool.setuptools.packages.find]
+include = ["llama"]
+
+[tool.yapf]
+based_on_style = "pep8"
