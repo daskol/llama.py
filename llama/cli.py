@@ -35,6 +35,11 @@ def serve():
     pass
 
 
+def quantize(model_dir: Path):
+    from .quantization import quantize
+    quantize(model_dir)
+
+
 def version_():
     print(f'llama.py version {__version__}')
 
@@ -99,6 +104,10 @@ parser_pull.add_argument('-s', '--model-size', choices=('7B', '13B', '30B', '65B
 
 parser_serve = subparsers.add_parser('serve', parents=[parser_opt_connection, parser_opt_model], help='run language server')  # noqa: E501
 parser_serve.set_defaults(func=serve)
+
+parser_quantize = subparsers.add_parser('quantize', help='quantize weights')  # noqa: E501
+parser_quantize.set_defaults(func=quantize)
+parser_quantize.add_argument('model_dir', type=Path, default=Path('.'), help='model directory')  # noqa: E501
 
 parser_version = subparsers.add_parser('version', add_help=False, help='show version and exit')  # noqa: E501
 parser_version.set_defaults(func=version_)
