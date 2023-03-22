@@ -54,6 +54,25 @@ And quantize the model to 4-bits.
 python -m llama quantize data/model/7B
 ```
 
+Then one can start Python interpreter and play with naked bindings.
+
+```python
+from llama._llama import *
+
+nothreads = 8
+model = LLaMA.load('./data/model/7B/ggml-model-q4_0.bin', 512, GGMLType.F32)
+mem_per_token = model.estimate_mem_per_token(nothreads)
+logits = model.apply(context, context_size, mem_per_token, nothreads)
+
+token_id = sample_next_token(context, logits)
+
+tokenizer = model.get_tokenizer()
+tokenizer.decode(token_id)
+
+```
+
+Or run CLI interface.
+
 ### Memory/Disk Requirements
 
 As the models are currently fully loaded into memory, you will need adequate
