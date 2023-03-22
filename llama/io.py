@@ -25,6 +25,7 @@ def convert(model_dir: PathLike, fp_type: str = 'fp16'):
     """
     if fp_type not in ('fp16', 'fp32'):
         raise ValueError('Param fp_type should either fp16 or fp32.')
+    fp_bits = fp_type[2:]
 
     model_dir = Path(model_dir)
     hparams, tokenizer = load_hparams_and_tokenizer(model_dir)
@@ -44,7 +45,7 @@ def convert(model_dir: PathLike, fp_type: str = 'fp16'):
 
         index = int(m.group(1))
         suffix = str(index) if index else ''
-        filename = f'ggml-model-{fp_type}.bin{suffix}'
+        filename = f'ggml-model-f{fp_bits}.bin{suffix}'
         convert_partition(path, path.with_name(filename))
 
 
@@ -64,13 +65,14 @@ def write_gglm_body(state_dict, fout, ftype='fp16'):
         if key.endswith('freqs'):
             continue
 
-        logging.info('processing variable %s: shape=%s dtype=%s', key,
-                     val.shape, val.dtype)
+        data = val.numpy()
+        logging.info('process %s: shape=%s dtype=%s', key, data.shape,
+                     data.dtype)
 
         # Default type is fp16.
         ftype_cur = 'fp16'
         if ftype == 'fp32' or val.ndim == 1:
-            logging.info('  converting to float32')
+            logging.info('  convert to float32')
             data = data.astype(np.float32)
             ftype_cur = 'fp32'
 
@@ -80,7 +82,7 @@ def write_gglm_body(state_dict, fout, ftype='fp16'):
 
         # Write header (sizes of shape, length of key, fp-type, shape, key).
         key_encoded = key.encode('utf-8')
-        data = val.numpy().squeeze()
+        data = data.squeeze()
         fout.write(pack('3i', len(data.shape), len(key_encoded), ftype_code))
         for dim in reversed(data.shape):
             fout.write(pack('i', dim))
