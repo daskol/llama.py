@@ -13,13 +13,15 @@ set_target_properties(ggml utils
         POSITION_INDEPENDENT_CODE ON
 )
 
-add_executable(llama main.cc)
+add_executable(llama llama.h llama.cc main.cc)
 target_link_libraries(llama PRIVATE ggml utils)
 
 add_executable(quantize quantization.h quantization.cc quantize.cc)
 target_link_libraries(quantize PRIVATE ggml utils)
 
 pybind11_add_module(_llama NO_EXTRAS
+    llama.h
+    llama.cc
     module.cc
     quantization.h
     quantization.cc)

@@ -1,5 +1,7 @@
+#include <llama/cc/llama.h>
 #include <llama/cc/quantization.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
 namespace {
 
@@ -20,7 +22,26 @@ PYBIND11_MODULE(_llama, m) {
     py::enum_<ggml_type>(m, "GGMLType")
         .value("Q4_0", ggml_type::GGML_TYPE_Q4_0)
         .value("Q4_1", ggml_type::GGML_TYPE_Q4_1)
+        .value("I8", ggml_type::GGML_TYPE_I8)
+        .value("I16", ggml_type::GGML_TYPE_I16)
+        .value("I32", ggml_type::GGML_TYPE_I32)
+        .value("F16", ggml_type::GGML_TYPE_F16)
+        .value("F32", ggml_type::GGML_TYPE_F32)
         .export_values();
+
+    py::class_<llama::Tokenizer>(m, "Tokenizer")
+        .def("decode", &llama::Tokenizer::Decode)
+        .def("encode", &llama::Tokenizer::Encode)
+        .def_static("load", &llama::Tokenizer::Load);
+
+    py::class_<llama::LLaMA>(m, "LLaMA")
+        .def("calc_perplexity", &llama::LLaMA::CalcPerplexity)
+        .def("estimate_mem_per_token", &llama::LLaMA::EstimateMemPerToken)
+        .def("eval", &llama::LLaMA::Eval)
+        .def("get_tokenizer", &llama::LLaMA::GetTokenizer)
+        .def_static("load", &llama::LLaMA::Load);
+
+    m.def("sample_next_token", &llama::SampleNextToken);
 
     m.def(
         "quantize_model", &llama::QuantizeModel,
