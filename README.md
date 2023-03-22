@@ -1,10 +1,11 @@
 # llama.py
 
-Inference of [LLaMA](https://arxiv.org/abs/2302.13971) model in pure C/C++.
+**llama.py** is a fork of [llama.cpp][1] which inference runtime for [LLaMA][2]
+model in pure C/C++.
 
 ## Description
 
-The main goal is to run the model using 4-bit quantization on a MacBook
+The main goal is to run the model using 4-bit quantization on a laptop.
 
 - Plain C/C++ implementation without dependencies.
 - Apple silicon first-class citizen - optimized via ARM NEON.
@@ -20,23 +21,37 @@ Build instruction follows.
 ```shell
 cmake -S . -B build/release
 cmake --build build/release
+ln -s build/release/llama/cc/_llama.cpython-310-x86_64-linux-gnu.so llama
 ```
 
-Obtain the original LLaMA model weights and place them in `models` directory.
+Obtain the original LLaMA model weights and place them in `data/model` directory.
 
-Install Python dependencies
 ```shell
-pip install torch numpy sentencepiece
+python -m llama pull -m data/model/7B -s 7B
 ```
 
-Convert the 7B model to ggml FP16 format.
-```shell
-python convert-pth-to-ggml.py models/7B/ 1
+As model weights are successfully fetched, directory structure should look like below.
+
+```
+data/model
+├── 7B
+│   ├── checklist.chk
+│   ├── consolidated.00.pth
+│   └── params.json
+├── tokenizer_checklist.chk
+└── tokenizer.model
 ```
 
-Quantize the model to 4-bits.
+Then one should convert the 7B model to ggml FP16 format.
+
 ```shell
-python quantize.py 7B
+python -m llama convert data/model/7B
+```
+
+And quantize the model to 4-bits.
+
+```shell
+python -m llama quantize data/model/7B
 ```
 
 ### Memory/Disk Requirements
@@ -51,3 +66,7 @@ and disk requirements are the same.
 | 13B   | 24 GB         | 7.8 GB                 |
 | 30B   | 60 GB         | 19.5 GB                |
 | 65B   | 120 GB        | 38.5 GB                |
+
+
+[1]: https://github.com/ggerganov/llama.cpp
+[2]: https://arxiv.org/abs/2302.13971
